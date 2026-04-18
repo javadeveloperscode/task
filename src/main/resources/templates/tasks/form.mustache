@@ -12,6 +12,10 @@
         .card { border: none; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
         .form-control:focus, .form-select:focus { box-shadow: 0 0 0 .2rem rgba(13,110,253,.2); }
         .flatpickr-input { background-color: #fff !important; }
+        @media (max-width: 576px) {
+            .card { border-radius: 0; box-shadow: none; }
+            .container { padding-left: 0; padding-right: 0; }
+        }
     </style>
 </head>
 <body>
@@ -57,12 +61,12 @@
                     </div>
 
                     <div class="row g-3 mb-3">
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <label class="form-label fw-medium">Начало <span class="text-danger">*</span></label>
                             <input type="text" id="startDate" name="startDate" class="form-control"
                                    value="{{startDate}}" placeholder="Выберите дату и время" required>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <label class="form-label fw-medium">Дедлайн <span class="text-danger">*</span></label>
                             <input type="text" id="endDate" name="endDate" class="form-control"
                                    value="{{endDate}}" placeholder="Выберите дату и время" required>
