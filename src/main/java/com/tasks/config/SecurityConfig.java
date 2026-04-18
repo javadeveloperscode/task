@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(THIRTY_DAYS)
                 .userDetailsService(userService)
+                .alwaysRemember(true)
             )
             .logout(logout -> logout
                 .logoutRequestMatcher(new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/logout"))
