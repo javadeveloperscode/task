@@ -20,6 +20,7 @@ public class TaskListItem {
     public String statusLabel;
     public boolean overdue;
     public boolean done;
+    public boolean global;
     public List<Map<String, Object>> statuses;
 
     private static final DateTimeFormatter FMT =
@@ -42,6 +43,7 @@ public class TaskListItem {
         item.statusLabel = task.getStatus().getLabel();
         item.overdue = task.isOverdue();
         item.done = task.isDone();
+        item.global = task.isGlobal();
         item.statuses = Arrays.stream(Task.Status.values())
                 .map(s -> Map.<String, Object>of(
                         "value", s.name(),

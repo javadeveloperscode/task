@@ -22,24 +22,27 @@ public class TaskController {
 
     @GetMapping
     public String list(Model model) {
-        List<Task> tasks = taskService.findAll();
-        long todoCount = tasks.stream().filter(t -> t.getStatus() == Task.Status.TODO).count();
-        long inProgressCount = tasks.stream().filter(t -> t.getStatus() == Task.Status.IN_PROGRESS).count();
-        long doneCount = tasks.stream().filter(t -> t.getStatus() == Task.Status.DONE).count();
-        long overdueCount = tasks.stream().filter(Task::isOverdue).count();
+        List<Task> daily = taskService.findDaily();
+        List<Task> global = taskService.findGlobal();
+        List<Task> all = taskService.findAll();
 
-        model.addAttribute("tasks", tasks.stream().map(TaskListItem::from).toList());
-        model.addAttribute("hasTasks", !tasks.isEmpty());
-        model.addAttribute("todoCount", todoCount);
-        model.addAttribute("inProgressCount", inProgressCount);
-        model.addAttribute("doneCount", doneCount);
-        model.addAttribute("overdueCount", overdueCount);
+        model.addAttribute("dailyTasks", daily.stream().map(TaskListItem::from).toList());
+        model.addAttribute("globalTasks", global.stream().map(TaskListItem::from).toList());
+        model.addAttribute("hasDailyTasks", !daily.isEmpty());
+        model.addAttribute("hasGlobalTasks", !global.isEmpty());
+
+        model.addAttribute("todoCount", all.stream().filter(t -> t.getStatus() == Task.Status.TODO).count());
+        model.addAttribute("inProgressCount", all.stream().filter(t -> t.getStatus() == Task.Status.IN_PROGRESS).count());
+        model.addAttribute("doneCount", all.stream().filter(t -> t.getStatus() == Task.Status.DONE).count());
+        model.addAttribute("overdueCount", all.stream().filter(Task::isOverdue).count());
         return "tasks/list";
     }
 
     @GetMapping("/new")
-    public String createForm(Model model) {
-        model.addAttribute("form", buildForm(new Task(), "Новая задача", true));
+    public String createForm(@RequestParam(defaultValue = "DAILY") Task.Type type, Model model) {
+        Task task = new Task();
+        task.setType(type);
+        model.addAttribute("form", buildForm(task, "Новая задача", true));
         return "tasks/form";
     }
 
@@ -100,7 +103,9 @@ public class TaskController {
     }
 
     private TaskFormModel buildForm(Task task, String formTitle, boolean isNew) {
-        return TaskFormModel.from(task, formTitle, isNew, buildStatuses(task.getStatus()));
+        return TaskFormModel.from(task, formTitle, isNew,
+                buildStatuses(task.getStatus()),
+                buildTypes(task.getType()));
     }
 
     private List<Map<String, Object>> buildStatuses(Task.Status selected) {
@@ -109,6 +114,16 @@ public class TaskController {
                         "value", s.name(),
                         "label", s.getLabel(),
                         "selected", s == selected
+                ))
+                .toList();
+    }
+
+    private List<Map<String, Object>> buildTypes(Task.Type selected) {
+        return Arrays.stream(Task.Type.values())
+                .map(t -> Map.<String, Object>of(
+                        "value", t.name(),
+                        "label", t.getLabel(),
+                        "selected", t == selected
                 ))
                 .toList();
     }

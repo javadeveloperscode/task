@@ -2,7 +2,6 @@ package com.tasks.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,17 +24,19 @@ public class Task {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @NotNull(message = "Дата начала обязательна")
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @NotNull(message = "Дата окончания обязательна")
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.TODO;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Type type = Type.DAILY;
 
     public enum Status {
         TODO("К выполнению"),
@@ -43,21 +44,28 @@ public class Task {
         DONE("Готово");
 
         private final String label;
+        Status(String label) { this.label = label; }
+        public String getLabel() { return label; }
+    }
 
-        Status(String label) {
-            this.label = label;
-        }
+    public enum Type {
+        GLOBAL("Глобальная"),
+        DAILY("Дневная");
 
-        public String getLabel() {
-            return label;
-        }
+        private final String label;
+        Type(String label) { this.label = label; }
+        public String getLabel() { return label; }
     }
 
     public boolean isOverdue() {
-        return status != Status.DONE && LocalDateTime.now().isAfter(endDate);
+        return status != Status.DONE && endDate != null && LocalDateTime.now().isAfter(endDate);
     }
 
     public boolean isDone() {
         return status == Status.DONE;
+    }
+
+    public boolean isGlobal() {
+        return type == Type.GLOBAL;
     }
 }

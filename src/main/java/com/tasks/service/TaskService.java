@@ -14,7 +14,15 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public List<Task> findAll() {
-        return taskRepository.findAllByOrderByEndDateAsc();
+        return taskRepository.findAll();
+    }
+
+    public List<Task> findDaily() {
+        return taskRepository.findAllByTypeOrderByEndDateAsc(Task.Type.DAILY);
+    }
+
+    public List<Task> findGlobal() {
+        return taskRepository.findAllByTypeOrderByStatusAsc(Task.Type.GLOBAL);
     }
 
     public Task findById(Long id) {
