@@ -307,6 +307,7 @@
                 </div>
                 <span class="task-date">{{startDate}}</span>
                 <div class="deadline-wrap">
+                    {{#endDateOnly}}
                     {{#overdue}}
                     <span class="task-date overdue-date"><i class="bi bi-exclamation-circle" style="margin-right:3px"></i>{{endDateOnly}}</span>
                     {{/overdue}}
@@ -316,6 +317,8 @@
                                class="time-input {{#overdue}}overdue-input{{/overdue}}"
                                onchange="this.form.submit()">
                     </form>
+                    {{/endDateOnly}}
+                    {{^endDateOnly}}<span class="task-date">—</span>{{/endDateOnly}}
                 </div>
                 <form action="/tasks/{{id}}/status" method="post">
                     <select name="status" class="status-select s-{{statusValue}}" onchange="this.form.submit()">
