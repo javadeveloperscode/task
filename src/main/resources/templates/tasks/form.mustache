@@ -69,17 +69,18 @@
                                   placeholder="Подробности задачи...">{{description}}</textarea>
                     </div>
 
-                    <div id="datesSection" class="row g-3 mb-3" {{#isGlobal}}style="display:none!important"{{/isGlobal}}>
-                        <div class="col-12 col-sm-6">
+                    <div id="startDateSection" class="row g-3 mb-3" {{#isGlobal}}style="display:none!important"{{/isGlobal}}>
+                        <div class="col-12">
                             <label class="form-label fw-medium">Начало</label>
                             <input type="text" id="startDate" name="startDate" class="form-control"
                                    value="{{startDate}}" placeholder="Выберите дату и время">
                         </div>
-                        <div class="col-12 col-sm-6">
-                            <label class="form-label fw-medium">Дедлайн</label>
-                            <input type="text" id="endDate" name="endDate" class="form-control"
-                                   value="{{endDate}}" placeholder="Выберите дату и время">
-                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Дедлайн</label>
+                        <input type="text" id="endDate" name="endDate" class="form-control"
+                               value="{{endDate}}" placeholder="Выберите дату и время">
                     </div>
 
                     <div class="mb-4">
@@ -126,10 +127,10 @@
 
     // Скрывать/показывать даты при смене типа
     const typeSelect = document.getElementById("typeSelect");
-    const datesSection = document.getElementById("datesSection");
     if (typeSelect) {
         typeSelect.addEventListener("change", function () {
-            datesSection.style.display = this.value === "GLOBAL" ? "none" : "";
+            document.getElementById("startDateSection").style.display =
+                this.value === "GLOBAL" ? "none" : "";
         });
     }
 </script>
