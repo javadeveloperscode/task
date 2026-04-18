@@ -58,7 +58,7 @@ public class SecurityConfig {
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
         repo.setDataSource(dataSource);
-        repo.setCreateTableOnStartup(true);
+        repo.setCreateTableOnStartup(false);
         return repo;
     }
 
