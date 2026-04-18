@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -97,12 +98,17 @@ public class TaskController {
 
     @PostMapping("/{id}/status")
     public String updateStatus(@PathVariable Long id, @RequestParam Task.Status status,
-                               @AuthenticationPrincipal UserDetails user) {
+                               @AuthenticationPrincipal UserDetails user,
+                               RedirectAttributes redirectAttributes) {
         Task task = taskService.findById(id);
         task.setStatus(status);
         if (status == Task.Status.DONE) {
             task.setCompletedAt(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
-            userService.recordActivity(user.getUsername());
+            int newStreak = userService.recordActivity(user.getUsername());
+            if (newStreak > 0) {
+                redirectAttributes.addFlashAttribute("streakUp", true);
+                redirectAttributes.addFlashAttribute("newStreak", newStreak);
+            }
         } else {
             task.setCompletedAt(null);
         }

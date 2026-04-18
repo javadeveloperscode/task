@@ -34,20 +34,24 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
     }
 
-    public void recordActivity(String username) {
+    /**
+     * @return новое значение стрика если он вырос, иначе -1
+     */
+    public int recordActivity(String username) {
         AppUser user = getByUsername(username);
         LocalDate today = LocalDate.now();
         LocalDate last = user.getLastActivityDate();
 
         if (today.equals(last)) {
-            return; // уже засчитано сегодня
+            return -1; // уже засчитано сегодня
         } else if (last != null && last.equals(today.minusDays(1))) {
-            user.setStreak(user.getStreak() + 1); // продолжаем серию
+            user.setStreak(user.getStreak() + 1);
         } else {
-            user.setStreak(1); // серия оборвалась — начинаем заново
+            user.setStreak(1);
         }
         user.setLastActivityDate(today);
         userRepository.save(user);
+        return user.getStreak();
     }
 
     public void register(String username, String password) {

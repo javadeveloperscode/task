@@ -161,6 +161,45 @@
         .empty i { font-size: 36px; display: block; margin-bottom: 10px; }
         .empty p { font-size: 15px; margin-bottom: 16px; }
 
+        /* ── Streak modal ── */
+        .streak-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,.45);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+        }
+        .streak-modal {
+            background: #fff; border-radius: 28px;
+            padding: 44px 48px; text-align: center;
+            box-shadow: 0 24px 80px rgba(0,0,0,.25);
+            transform: scale(.7); opacity: 0;
+            position: relative; overflow: hidden;
+            min-width: 280px;
+        }
+        .streak-modal-fire {
+            font-size: 72px; line-height: 1;
+            display: block; margin-bottom: 16px;
+            transform-origin: bottom center;
+        }
+        .streak-modal-num {
+            font-size: 64px; font-weight: 800; color: #ff9500;
+            line-height: 1; margin-bottom: 6px;
+        }
+        .streak-modal-label {
+            font-size: 18px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px;
+        }
+        .streak-modal-sub {
+            font-size: 14px; color: #6e6e73; margin-bottom: 28px;
+        }
+        .streak-modal-btn {
+            background: #ff9500; color: #fff; border: none;
+            border-radius: 980px; padding: 12px 36px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: opacity .15s;
+        }
+        .streak-modal-btn:hover { opacity: .85; }
+
         /* ── Mobile ── */
         @media (max-width: 768px) {
             .container { padding: 24px 16px; }
@@ -344,5 +383,73 @@
     </div>
 
 </div>
+
+{{#streakUp}}
+<div class="streak-overlay" id="streakOverlay">
+    <div class="streak-modal" id="streakModal">
+        <span class="streak-modal-fire" id="streakFire">🔥</span>
+        <div class="streak-modal-num" id="streakNum">{{newStreak}}</div>
+        <div class="streak-modal-label">Серия дней!</div>
+        <div class="streak-modal-sub">Так держать, не останавливайся</div>
+        <button class="streak-modal-btn" onclick="closeStreakModal()">Вперёд!</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+    const overlay = document.getElementById('streakOverlay');
+    const modal   = document.getElementById('streakModal');
+    const fire    = document.getElementById('streakFire');
+    const numEl   = document.getElementById('streakNum');
+    const target  = parseInt(numEl.textContent, 10);
+
+    // показать оверлей
+    gsap.set(overlay, { pointerEvents: 'auto' });
+
+    const tl = gsap.timeline();
+
+    // 1. оверлей появляется
+    tl.to(overlay, { opacity: 1, duration: .3, ease: 'power2.out' })
+
+    // 2. карточка выпрыгивает
+    .to(modal, { opacity: 1, scale: 1, duration: .5, ease: 'back.out(1.8)' }, '-=.1')
+
+    // 3. огонь качается
+    .to(fire, { rotation: -15, duration: .12, ease: 'power1.inOut', yoyo: true, repeat: 5 }, '-=.2')
+
+    // 4. число считается от 0 до target
+    .from({ val: 0 }, {
+        val: target,
+        duration: .8,
+        ease: 'power2.out',
+        onUpdate: function() {
+            numEl.textContent = Math.round(this.targets()[0].val);
+        }
+    }, '-=.3')
+
+    // 5. конфетти
+    .add(() => {
+        confetti({ particleCount: 120, spread: 80, origin: { y: .55 },
+            colors: ['#ff9500','#ff6b00','#ffcc00','#ff3b30','#ff9f0a'] });
+    }, '-=.4');
+
+    function closeStreakModal() {
+        gsap.to(overlay, {
+            opacity: 0, duration: .25, ease: 'power2.in',
+            onComplete: () => overlay.remove()
+        });
+    }
+
+    // закрыть по клику на фон
+    overlay.addEventListener('click', e => {
+        if (e.target === overlay) closeStreakModal();
+    });
+
+    // автозакрытие через 4 секунды
+    setTimeout(closeStreakModal, 4000);
+</script>
+{{/streakUp}}
+
 </body>
 </html>
