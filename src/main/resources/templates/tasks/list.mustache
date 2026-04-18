@@ -403,6 +403,7 @@
     const fire    = document.getElementById('streakFire');
     const numEl   = document.getElementById('streakNum');
     const target  = parseInt(numEl.textContent, 10);
+    numEl.textContent = '0';
 
     // показать оверлей
     gsap.set(overlay, { pointerEvents: 'auto' });
