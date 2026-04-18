@@ -30,7 +30,7 @@
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5">
             <div class="card p-4">
 
                 {{#form}}
@@ -49,6 +49,15 @@
                 {{/isNew}}
 
                     <div class="mb-3">
+                        <label class="form-label fw-medium">Тип задачи</label>
+                        <select name="type" id="typeSelect" class="form-select">
+                            {{#types}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/types}}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label fw-medium">Название <span class="text-danger">*</span></label>
                         <input type="text" name="title" class="form-control" value="{{title}}"
                                placeholder="Что нужно сделать?" required>
@@ -60,16 +69,16 @@
                                   placeholder="Подробности задачи...">{{description}}</textarea>
                     </div>
 
-                    <div class="row g-3 mb-3">
+                    <div id="datesSection" class="row g-3 mb-3" {{#isGlobal}}style="display:none!important"{{/isGlobal}}>
                         <div class="col-12 col-sm-6">
-                            <label class="form-label fw-medium">Начало <span class="text-danger">*</span></label>
+                            <label class="form-label fw-medium">Начало</label>
                             <input type="text" id="startDate" name="startDate" class="form-control"
-                                   value="{{startDate}}" placeholder="Выберите дату и время" required>
+                                   value="{{startDate}}" placeholder="Выберите дату и время">
                         </div>
                         <div class="col-12 col-sm-6">
-                            <label class="form-label fw-medium">Дедлайн <span class="text-danger">*</span></label>
+                            <label class="form-label fw-medium">Дедлайн</label>
                             <input type="text" id="endDate" name="endDate" class="form-control"
-                                   value="{{endDate}}" placeholder="Выберите дату и время" required>
+                                   value="{{endDate}}" placeholder="Выберите дату и время">
                         </div>
                     </div>
 
@@ -114,6 +123,15 @@
     };
     flatpickr("#startDate", pickerConfig);
     flatpickr("#endDate", pickerConfig);
+
+    // Скрывать/показывать даты при смене типа
+    const typeSelect = document.getElementById("typeSelect");
+    const datesSection = document.getElementById("datesSection");
+    if (typeSelect) {
+        typeSelect.addEventListener("change", function () {
+            datesSection.style.display = this.value === "GLOBAL" ? "none" : "";
+        });
+    }
 </script>
 </body>
 </html>
