@@ -13,6 +13,7 @@
         .stat-card:hover { transform: translateY(-2px); }
         .task-row.overdue td { background-color: #fff5f5; }
         .task-row.done-row td { opacity: .6; }
+        .time-inline { width: 90px; display: inline-block; font-size: .8rem; padding: 2px 6px; }
         .status-select { border-radius: 20px; font-size: .8rem; font-weight: 500; cursor: pointer; }
         .status-TODO { border-color: #6c757d; color: #6c757d; }
         .status-IN_PROGRESS { border-color: #0d6efd; color: #0d6efd; }
@@ -104,12 +105,21 @@
                             </td>
                             <td class="text-muted">{{startDate}}</td>
                             <td>
-                                {{#overdue}}
-                                <span class="text-danger fw-semibold">
-                                    <i class="bi bi-exclamation-circle me-1"></i>{{endDate}}
-                                </span>
-                                {{/overdue}}
-                                {{^overdue}}{{endDate}}{{/overdue}}
+                                <div class="d-flex align-items-center gap-1">
+                                    {{#overdue}}
+                                    <span class="text-danger fw-semibold">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{endDateOnly}}
+                                    </span>
+                                    {{/overdue}}
+                                    {{^overdue}}
+                                    <span class="text-muted small">{{endDateOnly}}</span>
+                                    {{/overdue}}
+                                    <form action="/tasks/{{id}}/end-time" method="post" class="d-inline">
+                                        <input type="time" name="time" value="{{endTime}}"
+                                               class="form-control form-control-sm time-inline {{#overdue}}border-danger{{/overdue}}"
+                                               onchange="this.form.submit()">
+                                    </form>
+                                </div>
                             </td>
                             <td>
                                 <form action="/tasks/{{id}}/status" method="post" class="d-inline">

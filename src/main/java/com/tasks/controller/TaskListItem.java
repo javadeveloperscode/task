@@ -14,6 +14,8 @@ public class TaskListItem {
     public String description;
     public String startDate;
     public String endDate;
+    public String endDateOnly;
+    public String endTime;
     public String statusValue;
     public String statusLabel;
     public boolean overdue;
@@ -22,6 +24,10 @@ public class TaskListItem {
 
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("d MMM HH:mm", new Locale("ru"));
+    private static final DateTimeFormatter DATE_FMT =
+            DateTimeFormatter.ofPattern("d MMM", new Locale("ru"));
+    private static final DateTimeFormatter TIME_FMT =
+            DateTimeFormatter.ofPattern("HH:mm");
 
     public static TaskListItem from(Task task) {
         TaskListItem item = new TaskListItem();
@@ -30,6 +36,8 @@ public class TaskListItem {
         item.description = task.getDescription();
         item.startDate = task.getStartDate() != null ? task.getStartDate().format(FMT) : "";
         item.endDate = task.getEndDate() != null ? task.getEndDate().format(FMT) : "";
+        item.endDateOnly = task.getEndDate() != null ? task.getEndDate().format(DATE_FMT) : "";
+        item.endTime = task.getEndDate() != null ? task.getEndDate().format(TIME_FMT) : "";
         item.statusValue = task.getStatus().name();
         item.statusLabel = task.getStatus().getLabel();
         item.overdue = task.isOverdue();

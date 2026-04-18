@@ -72,6 +72,19 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
+    @PostMapping("/{id}/end-time")
+    public String updateEndTime(@PathVariable Long id, @RequestParam String time) {
+        Task task = taskService.findById(id);
+        if (task.getEndDate() != null) {
+            String[] parts = time.split(":");
+            task.setEndDate(task.getEndDate()
+                    .withHour(Integer.parseInt(parts[0]))
+                    .withMinute(Integer.parseInt(parts[1])));
+            taskService.save(task);
+        }
+        return "redirect:/tasks";
+    }
+
     @PostMapping("/{id}/status")
     public String updateStatus(@PathVariable Long id, @RequestParam Task.Status status) {
         Task task = taskService.findById(id);
