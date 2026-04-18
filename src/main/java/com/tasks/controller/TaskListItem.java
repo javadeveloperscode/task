@@ -23,12 +23,17 @@ public class TaskListItem {
     public boolean global;
     public List<Map<String, Object>> statuses;
 
+    public String startDateIso;
+    public String endDateIso;
+
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("d MMM HH:mm", new Locale("ru"));
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("d MMM", new Locale("ru"));
     private static final DateTimeFormatter TIME_FMT =
             DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter ISO_FMT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     public static TaskListItem from(Task task) {
         TaskListItem item = new TaskListItem();
@@ -36,7 +41,9 @@ public class TaskListItem {
         item.title = task.getTitle();
         item.description = task.getDescription();
         item.startDate = task.getStartDate() != null ? task.getStartDate().format(FMT) : "";
+        item.startDateIso = task.getStartDate() != null ? task.getStartDate().format(ISO_FMT) : "";
         item.endDate = task.getEndDate() != null ? task.getEndDate().format(FMT) : "";
+        item.endDateIso = task.getEndDate() != null ? task.getEndDate().format(ISO_FMT) : "";
         item.endDateOnly = task.getEndDate() != null ? task.getEndDate().format(DATE_FMT) : "";
         item.endTime = task.getEndDate() != null ? task.getEndDate().format(TIME_FMT) : "";
         item.statusValue = task.getStatus().name();
