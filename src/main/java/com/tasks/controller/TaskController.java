@@ -33,10 +33,16 @@ public class TaskController {
         List<Task> global = taskService.findGlobal();
         List<Task> all = taskService.findAll();
 
-        model.addAttribute("dailyTasks", daily.stream().map(TaskListItem::from).toList());
-        model.addAttribute("globalTasks", global.stream().map(TaskListItem::from).toList());
-        model.addAttribute("hasDailyTasks", !daily.isEmpty());
-        model.addAttribute("hasGlobalTasks", !global.isEmpty());
+        List<Task> overdue = all.stream().filter(Task::isOverdue).toList();
+        List<Task> dailyActive = daily.stream().filter(t -> !t.isOverdue()).toList();
+        List<Task> globalActive = global.stream().filter(t -> !t.isOverdue()).toList();
+
+        model.addAttribute("overdueTasks", overdue.stream().map(TaskListItem::from).toList());
+        model.addAttribute("hasOverdueTasks", !overdue.isEmpty());
+        model.addAttribute("dailyTasks", dailyActive.stream().map(TaskListItem::from).toList());
+        model.addAttribute("globalTasks", globalActive.stream().map(TaskListItem::from).toList());
+        model.addAttribute("hasDailyTasks", !dailyActive.isEmpty());
+        model.addAttribute("hasGlobalTasks", !globalActive.isEmpty());
 
         model.addAttribute("todoCount", all.stream().filter(t -> t.getStatus() == Task.Status.TODO).count());
         model.addAttribute("inProgressCount", all.stream().filter(t -> t.getStatus() == Task.Status.IN_PROGRESS).count());

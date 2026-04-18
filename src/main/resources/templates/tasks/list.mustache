@@ -83,6 +83,17 @@
             font-size: 11px; font-weight: 700; letter-spacing: .06em;
             text-transform: uppercase; color: #6e6e73;
         }
+        .section-title.overdue-title { color: #ff3b30; }
+        .task-list.overdue-list {
+            box-shadow: 0 2px 12px rgba(255,59,48,.12);
+            border: 1px solid rgba(255,59,48,.15);
+        }
+        .task-list.overdue-list .task-name { color: #ff3b30; }
+        .task-list.overdue-list .task-desc { color: rgba(255,59,48,.65); }
+        .task-list.overdue-list .task-date { color: #ff3b30; }
+        .task-list.overdue-list .task-item { background: #fff8f7; }
+        .task-list.overdue-list .task-item:hover { background: #fff2f0; }
+        .task-list.overdue-list .task-item.done-row { opacity: .45; }
 
         /* ── Task list ── */
         .task-list {
@@ -306,6 +317,57 @@
             <div class="stat-label">Просрочено</div>
         </div>
     </div>
+
+    <!-- Невыполненные задачи -->
+    {{#hasOverdueTasks}}
+    <div class="section">
+        <div class="section-header">
+            <span class="section-title overdue-title">Невыполненное</span>
+        </div>
+        <div class="task-list overdue-list">
+            <div class="task-item global-item task-header">
+                <span>Задача</span><span>Дедлайн</span><span>Статус</span><span></span>
+            </div>
+            {{#overdueTasks}}
+            <div class="task-item global-item {{#done}}done-row{{/done}}">
+                <div>
+                    <div class="task-name">{{title}}</div>
+                    {{#description}}<div class="task-desc">{{description}}</div>{{/description}}
+                </div>
+                <div class="deadline-wrap">
+                    {{#endDateOnly}}
+                    <span class="task-date">{{endDateOnly}}</span>
+                    <form action="/tasks/{{id}}/end-time" method="post">
+                        <input type="time" name="time" value="{{endTime}}"
+                               class="time-input overdue-input"
+                               onchange="this.form.submit()">
+                    </form>
+                    {{/endDateOnly}}
+                    {{^endDateOnly}}<span class="task-date">—</span>{{/endDateOnly}}
+                </div>
+                <form action="/tasks/{{id}}/status" method="post">
+                    <select name="status" class="status-select s-{{statusValue}}" onchange="this.form.submit()">
+                        {{#statuses}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/statuses}}
+                    </select>
+                </form>
+                <div class="actions">
+                    <button type="button" class="action-btn edit-task-btn"
+                        data-id="{{id}}" data-type="{{#global}}GLOBAL{{/global}}{{^global}}DAILY{{/global}}" data-status="{{statusValue}}"
+                        data-start="{{startDateIso}}" data-end="{{endDateIso}}"
+                        data-title="{{title}}" data-desc="{{description}}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <form action="/tasks/{{id}}/delete" method="post" onsubmit="return confirm('Удалить «{{title}}»?')">
+                        <button type="submit" class="action-btn delete"><i class="bi bi-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+            {{/overdueTasks}}
+        </div>
+    </div>
+    {{/hasOverdueTasks}}
 
     <!-- Глобальные задачи -->
     <div class="section">
