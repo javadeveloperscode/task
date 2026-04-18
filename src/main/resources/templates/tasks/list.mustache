@@ -91,26 +91,30 @@
             overflow: hidden;
         }
         .task-item {
-            display: grid; align-items: center;
+            display: grid; align-items: start;
             padding: 14px 20px;
             border-bottom: 1px solid rgba(0,0,0,.05);
             transition: background .12s;
         }
         .task-item:last-child { border-bottom: none; }
         .task-item:hover { background: #fafafa; }
-        .task-item.daily-item { grid-template-columns: 1fr 120px 190px 150px auto; gap: 16px; }
-        .task-item.global-item { grid-template-columns: 1fr 190px 150px auto; gap: 16px; }
+        .task-item.daily-item { grid-template-columns: minmax(0,1fr) 120px 190px 150px auto; gap: 16px; }
+        .task-item.global-item { grid-template-columns: minmax(0,1fr) 190px 150px auto; gap: 16px; }
         .task-item.overdue { background: #fff8f7; }
         .task-item.done-row { opacity: .55; }
+
+        /* выравнивание не-текстовых ячеек по центру строки */
+        .task-item > *:not(:first-child) { padding-top: 2px; }
 
         .task-header { display: grid; grid-template-columns: inherit; gap: inherit;
             padding: 10px 20px 8px; border-bottom: 1px solid rgba(0,0,0,.08); }
         .task-header span { font-size: 11px; font-weight: 600; color: #aeaeb2;
             text-transform: uppercase; letter-spacing: .05em; }
 
-        .task-name { font-size: 15px; font-weight: 500; }
+        .task-name { font-size: 15px; font-weight: 500;
+            overflow-wrap: break-word; word-break: break-word; }
         .task-desc { font-size: 13px; color: #6e6e73; margin-top: 2px;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .task-date { font-size: 13px; color: #6e6e73; }
         .task-date.overdue-date { color: #ff3b30; font-weight: 500; }
 
