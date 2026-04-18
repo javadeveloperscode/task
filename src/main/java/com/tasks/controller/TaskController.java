@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -98,10 +100,13 @@ public class TaskController {
                                @AuthenticationPrincipal UserDetails user) {
         Task task = taskService.findById(id);
         task.setStatus(status);
-        taskService.save(task);
         if (status == Task.Status.DONE) {
+            task.setCompletedAt(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
             userService.recordActivity(user.getUsername());
+        } else {
+            task.setCompletedAt(null);
         }
+        taskService.save(task);
         return "redirect:/tasks";
     }
 

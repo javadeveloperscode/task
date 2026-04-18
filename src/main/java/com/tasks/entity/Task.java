@@ -30,6 +30,9 @@ public class Task {
     @Column(name = "end_date")
     private LocalDateTime endDate;
 
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.TODO;
