@@ -2,8 +2,11 @@ package com.tasks.controller;
 
 import com.tasks.entity.Task;
 import com.tasks.service.TaskService;
+import com.tasks.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,9 +22,10 @@ import java.util.Map;
 public class TaskController {
 
     private final TaskService taskService;
+    private final UserService userService;
 
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model, @AuthenticationPrincipal UserDetails user) {
         List<Task> daily = taskService.findDaily();
         List<Task> global = taskService.findGlobal();
         List<Task> all = taskService.findAll();
@@ -35,6 +39,7 @@ public class TaskController {
         model.addAttribute("inProgressCount", all.stream().filter(t -> t.getStatus() == Task.Status.IN_PROGRESS).count());
         model.addAttribute("doneCount", all.stream().filter(t -> t.getStatus() == Task.Status.DONE).count());
         model.addAttribute("overdueCount", all.stream().filter(Task::isOverdue).count());
+        model.addAttribute("streak", userService.getByUsername(user.getUsername()).getStreak());
         return "tasks/list";
     }
 
@@ -89,10 +94,14 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/status")
-    public String updateStatus(@PathVariable Long id, @RequestParam Task.Status status) {
+    public String updateStatus(@PathVariable Long id, @RequestParam Task.Status status,
+                               @AuthenticationPrincipal UserDetails user) {
         Task task = taskService.findById(id);
         task.setStatus(status);
         taskService.save(task);
+        if (status == Task.Status.DONE) {
+            userService.recordActivity(user.getUsername());
+        }
         return "redirect:/tasks";
     }
 

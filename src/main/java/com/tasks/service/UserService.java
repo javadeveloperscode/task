@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -25,6 +27,27 @@ public class UserService implements UserDetailsService {
                 .password(user.getPassword())
                 .roles("USER")
                 .build();
+    }
+
+    public AppUser getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
+    }
+
+    public void recordActivity(String username) {
+        AppUser user = getByUsername(username);
+        LocalDate today = LocalDate.now();
+        LocalDate last = user.getLastActivityDate();
+
+        if (today.equals(last)) {
+            return; // уже засчитано сегодня
+        } else if (last != null && last.equals(today.minusDays(1))) {
+            user.setStreak(user.getStreak() + 1); // продолжаем серию
+        } else {
+            user.setStreak(1); // серия оборвалась — начинаем заново
+        }
+        user.setLastActivityDate(today);
+        userRepository.save(user);
     }
 
     public void register(String username, String password) {

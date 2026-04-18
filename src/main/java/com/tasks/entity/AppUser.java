@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "app_users")
 @Getter
@@ -19,4 +21,10 @@ public class AppUser {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private int streak = 0;
+
+    @Column(name = "last_activity_date")
+    private LocalDate lastActivityDate;
 }

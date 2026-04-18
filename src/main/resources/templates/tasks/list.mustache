@@ -12,6 +12,10 @@
         .stat-card { transition: transform .15s; }
         .stat-card:hover { transform: translateY(-2px); }
         .section-title { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+        .streak-badge { display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,.15);
+            border-radius: 20px; padding: 3px 10px; font-weight: 700; font-size: .95rem; color: #fff; }
+        .streak-badge.active { background: rgba(255,200,0,.25); }
+        .streak-count { font-size: .9rem; }
 
         /* Таблица */
         .task-row.overdue td { background-color: #fff5f5; }
@@ -35,7 +39,10 @@
         <span class="navbar-brand fw-semibold">
             <i class="bi bi-check2-square me-2"></i>Задачник
         </span>
-        <div class="d-flex gap-2">
+        <div class="d-flex align-items-center gap-2">
+            <div class="streak-badge {{#streak}}active{{/streak}}">
+                🔥 <span class="streak-count">{{streak}}</span>
+            </div>
             <a href="/tasks/new?type=GLOBAL" class="btn btn-light btn-sm">
                 <i class="bi bi-globe2"></i>
                 <span class="d-none d-sm-inline ms-1">Глобальная</span>
