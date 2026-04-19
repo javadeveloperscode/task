@@ -44,8 +44,8 @@ public class TaskListItem {
         item.startDateIso = task.getStartDate() != null ? task.getStartDate().format(ISO_FMT) : "";
         item.endDate = task.getEndDate() != null ? task.getEndDate().format(FMT) : "";
         item.endDateIso = task.getEndDate() != null ? task.getEndDate().format(ISO_FMT) : "";
-        item.endDateOnly = task.getEndDate() != null ? task.getEndDate().format(DATE_FMT) : "";
-        item.endTime = task.getEndDate() != null ? task.getEndDate().format(TIME_FMT) : "";
+        item.endDateOnly = task.getEndDate() != null ? task.getEndDate().format(DATE_FMT) : null;
+        item.endTime = task.getEndDate() != null ? task.getEndDate().format(TIME_FMT) : null;
         item.statusValue = task.getStatus().name();
         item.statusLabel = task.getStatus().getLabel();
         item.overdue = task.isOverdue();
