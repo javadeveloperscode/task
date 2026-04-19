@@ -141,7 +141,8 @@ public class TaskController {
     private TaskFormModel buildForm(Task task, String formTitle, boolean isNew) {
         return TaskFormModel.from(task, formTitle, isNew,
                 buildStatuses(task.getStatus()),
-                buildTypes(task.getType()));
+                buildTypes(task.getType()),
+                buildPriorities(task.getPriority()));
     }
 
     private List<Map<String, Object>> buildStatuses(Task.Status selected) {
@@ -160,6 +161,16 @@ public class TaskController {
                         "value", t.name(),
                         "label", t.getLabel(),
                         "selected", t == selected
+                ))
+                .toList();
+    }
+
+    private List<Map<String, Object>> buildPriorities(Task.Priority selected) {
+        return Arrays.stream(Task.Priority.values())
+                .map(p -> Map.<String, Object>of(
+                        "value", p.name(),
+                        "label", p.getLabel(),
+                        "selected", p == selected
                 ))
                 .toList();
     }

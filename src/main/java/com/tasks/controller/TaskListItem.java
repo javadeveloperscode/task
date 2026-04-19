@@ -21,6 +21,10 @@ public class TaskListItem {
     public boolean overdue;
     public boolean done;
     public boolean global;
+    public String priorityValue;
+    public boolean priorityHigh;
+    public boolean priorityMedium;
+    public boolean priorityLow;
     public List<Map<String, Object>> statuses;
 
     public String startDateIso;
@@ -51,6 +55,10 @@ public class TaskListItem {
         item.overdue = task.isOverdue();
         item.done = task.isDone();
         item.global = task.isGlobal();
+        item.priorityValue = task.getPriority().name();
+        item.priorityHigh = task.getPriority() == Task.Priority.HIGH;
+        item.priorityMedium = task.getPriority() == Task.Priority.MEDIUM;
+        item.priorityLow = task.getPriority() == Task.Priority.LOW;
         item.statuses = Arrays.stream(Task.Status.values())
                 .map(s -> Map.<String, Object>of(
                         "value", s.name(),

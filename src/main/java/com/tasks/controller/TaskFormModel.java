@@ -17,12 +17,14 @@ public class TaskFormModel {
     public boolean isGlobal;
     public List<Map<String, Object>> statuses;
     public List<Map<String, Object>> types;
+    public List<Map<String, Object>> priorities;
 
     private static final DateTimeFormatter DATETIME_LOCAL = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     public static TaskFormModel from(Task task, String formTitle, boolean isNew,
                                      List<Map<String, Object>> statuses,
-                                     List<Map<String, Object>> types) {
+                                     List<Map<String, Object>> types,
+                                     List<Map<String, Object>> priorities) {
         TaskFormModel m = new TaskFormModel();
         m.taskId = task.getId();
         m.title = task.getTitle() != null ? task.getTitle() : "";
@@ -34,6 +36,7 @@ public class TaskFormModel {
         m.isGlobal = task.isGlobal();
         m.statuses = statuses;
         m.types = types;
+        m.priorities = priorities;
         return m;
     }
 }

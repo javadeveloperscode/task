@@ -40,6 +40,10 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private Priority priority = Priority.MEDIUM;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Type type = Type.DAILY;
 
     public enum Status {
@@ -49,6 +53,16 @@ public class Task {
 
         private final String label;
         Status(String label) { this.label = label; }
+        public String getLabel() { return label; }
+    }
+
+    public enum Priority {
+        HIGH("Высокий"),
+        MEDIUM("Средний"),
+        LOW("Низкий");
+
+        private final String label;
+        Priority(String label) { this.label = label; }
         public String getLabel() { return label; }
     }
 

@@ -127,6 +127,16 @@
         .task-header span { font-size: 11px; font-weight: 600; color: #aeaeb2;
             text-transform: uppercase; letter-spacing: .05em; }
 
+        .priority-badge {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            letter-spacing: .04em; text-transform: uppercase;
+            padding: 2px 7px; border-radius: 980px; margin-right: 6px;
+            vertical-align: middle; position: relative; top: -1px;
+        }
+        .priority-high   { background: rgba(255,59,48,.12);  color: #c0392b; }
+        .priority-medium { background: rgba(255,149,0,.12);  color: #b8650a; }
+        .priority-low    { background: rgba(142,142,147,.12); color: #6e6e73; }
+
         .task-name { font-size: 15px; font-weight: 500;
             overflow-wrap: break-word; word-break: break-word; }
         .task-desc { font-size: 13px; color: #6e6e73; margin-top: 2px;
@@ -342,7 +352,11 @@
             {{#overdueTasks}}
             <div class="task-item global-item {{#done}}done-row{{/done}}">
                 <div>
-                    <div class="task-name">{{title}}</div>
+                    <div class="task-name">
+                        {{#priorityHigh}}<span class="priority-badge priority-high">Высокий</span>{{/priorityHigh}}
+                        {{#priorityLow}}<span class="priority-badge priority-low">Низкий</span>{{/priorityLow}}
+                        {{title}}
+                    </div>
                     {{#description}}<div class="task-desc">{{description}}</div>{{/description}}
                 </div>
                 <div class="deadline-wrap">
@@ -364,7 +378,7 @@
                 </form>
                 <div class="actions">
                     <button type="button" class="action-btn edit-task-btn"
-                        data-id="{{id}}" data-type="{{#global}}GLOBAL{{/global}}{{^global}}DAILY{{/global}}" data-status="{{statusValue}}"
+                        data-id="{{id}}" data-type="{{#global}}GLOBAL{{/global}}{{^global}}DAILY{{/global}}" data-status="{{statusValue}}" data-priority="{{priorityValue}}"
                         data-start="{{startDateIso}}" data-end="{{endDateIso}}"
                         data-title="{{title}}" data-desc="{{description}}">
                         <i class="bi bi-pencil"></i>
@@ -402,7 +416,11 @@
             {{#globalTasks}}
             <div class="task-item global-item {{#overdue}}overdue{{/overdue}} {{#done}}done-row{{/done}}">
                 <div>
-                    <div class="task-name">{{title}}</div>
+                    <div class="task-name">
+                        {{#priorityHigh}}<span class="priority-badge priority-high">Высокий</span>{{/priorityHigh}}
+                        {{#priorityLow}}<span class="priority-badge priority-low">Низкий</span>{{/priorityLow}}
+                        {{title}}
+                    </div>
                     {{#description}}<div class="task-desc">{{description}}</div>{{/description}}
                 </div>
                 <div class="deadline-wrap">
@@ -424,7 +442,7 @@
                 </form>
                 <div class="actions">
                     <button type="button" class="action-btn edit-task-btn"
-                        data-id="{{id}}" data-type="GLOBAL" data-status="{{statusValue}}"
+                        data-id="{{id}}" data-type="GLOBAL" data-status="{{statusValue}}" data-priority="{{priorityValue}}"
                         data-start="{{startDateIso}}" data-end="{{endDateIso}}"
                         data-title="{{title}}" data-desc="{{description}}">
                         <i class="bi bi-pencil"></i>
@@ -462,7 +480,11 @@
             {{#dailyTasks}}
             <div class="task-item daily-item {{#overdue}}overdue{{/overdue}} {{#done}}done-row{{/done}}">
                 <div>
-                    <div class="task-name">{{title}}</div>
+                    <div class="task-name">
+                        {{#priorityHigh}}<span class="priority-badge priority-high">Высокий</span>{{/priorityHigh}}
+                        {{#priorityLow}}<span class="priority-badge priority-low">Низкий</span>{{/priorityLow}}
+                        {{title}}
+                    </div>
                     {{#description}}<div class="task-desc">{{description}}</div>{{/description}}
                 </div>
                 <span class="task-date">{{startDate}}</span>
@@ -488,7 +510,7 @@
                 </form>
                 <div class="actions">
                     <button type="button" class="action-btn edit-task-btn"
-                        data-id="{{id}}" data-type="DAILY" data-status="{{statusValue}}"
+                        data-id="{{id}}" data-type="DAILY" data-status="{{statusValue}}" data-priority="{{priorityValue}}"
                         data-start="{{startDateIso}}" data-end="{{endDateIso}}"
                         data-title="{{title}}" data-desc="{{description}}">
                         <i class="bi bi-pencil"></i>
@@ -541,6 +563,15 @@
             </div>
 
             <div class="edit-field">
+                <label class="edit-label">Приоритет</label>
+                <select id="ef-priority" name="priority" class="edit-input">
+                    <option value="HIGH">Высокий</option>
+                    <option value="MEDIUM">Средний</option>
+                    <option value="LOW">Низкий</option>
+                </select>
+            </div>
+
+            <div class="edit-field">
                 <label class="edit-label">Статус</label>
                 <select id="ef-status" name="status" class="edit-input">
                     <option value="TODO">К выполнению</option>
@@ -583,6 +614,7 @@
         document.getElementById('ef-title').value = d.title;
         document.getElementById('ef-description').value = d.desc || '';
         document.getElementById('ef-type').value = d.type;
+        document.getElementById('ef-priority').value = d.priority || 'MEDIUM';
         document.getElementById('ef-status').value = d.status;
         fpStart.setDate(d.start || null, false);
         fpEnd.setDate(d.end || null, false);

@@ -163,6 +163,15 @@
             </div>
 
             <div class="field">
+                <label class="field-label">Приоритет</label>
+                <select name="priority" class="field-input">
+                    {{#priorities}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/priorities}}
+                </select>
+            </div>
+
+            <div class="field">
                 <label class="field-label">Статус</label>
                 <select name="status" class="field-input">
                     {{#statuses}}
