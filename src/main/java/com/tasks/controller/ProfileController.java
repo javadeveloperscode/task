@@ -106,4 +106,16 @@ public class ProfileController {
         }
         return java.util.Map.of("error", "Нет сообщений. Напишите боту что-нибудь и попробуйте снова.");
     }
+
+    @PostMapping("/telegram/test")
+    @ResponseBody
+    public java.util.Map<String, String> testTelegram(@AuthenticationPrincipal UserDetails userDetails) {
+        AppUser user = userService.getByUsername(userDetails.getUsername());
+        if (user.getTelegramChatId() == null) {
+            return java.util.Map.of("error", "Chat ID не сохранён");
+        }
+        telegramService.sendMessage(user.getTelegramChatId(),
+                "✅ Задачник подключён!\n\nБуду присылать уведомления за 30 минут до начала задачи.");
+        return java.util.Map.of("ok", "Сообщение отправлено");
+    }
 }

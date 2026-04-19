@@ -260,7 +260,10 @@
             </div>
         </div>
         {{#telegramConnected}}
-        <div class="tg-connected"><i class="bi bi-check-circle-fill"></i> Подключено</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div class="tg-connected" style="margin-bottom:0"><i class="bi bi-check-circle-fill"></i> Подключено</div>
+            <button type="button" class="tg-btn tg-btn-detect" style="padding:4px 12px;font-size:12px" onclick="testTelegram()">Отправить тест</button>
+        </div>
         {{/telegramConnected}}
         {{#telegramSaved}}
         <div class="tg-saved"><i class="bi bi-check-circle-fill"></i> Сохранено</div>
@@ -279,6 +282,15 @@
         </div>
 
         <script>
+        function testTelegram() {
+            fetch('/profile/telegram/test', {method:'POST'})
+                .then(r => r.json())
+                .then(data => {
+                    const msg = document.getElementById('tgDetectMsg');
+                    msg.style.display = '';
+                    msg.textContent = data.ok || data.error;
+                });
+        }
         function detectChatId() {
             const msg = document.getElementById('tgDetectMsg');
             msg.style.display = '';
