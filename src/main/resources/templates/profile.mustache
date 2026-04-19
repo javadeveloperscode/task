@@ -116,6 +116,50 @@
         }
         .streak-icon.zero { background: rgba(0,0,0,.05); color: #aeaeb2; }
 
+        /* ── Telegram card ── */
+        .tg-card {
+            background: #fff; border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            padding: 24px 28px; margin-bottom: 20px;
+        }
+        .tg-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+        }
+        .tg-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(0,136,212,.12);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #0088d4; flex-shrink: 0;
+        }
+        .tg-title { font-size: 15px; font-weight: 600; }
+        .tg-sub { font-size: 13px; color: #6e6e73; margin-top: 1px; }
+        .tg-connected {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 12px; font-weight: 600; color: #34c759;
+            background: rgba(52,199,89,.1); border-radius: 980px;
+            padding: 3px 10px; margin-bottom: 12px;
+        }
+        .tg-row { display: flex; gap: 8px; }
+        .tg-input {
+            flex: 1; border: 1px solid #d2d2d7; border-radius: 10px;
+            padding: 9px 13px; font-size: 14px; color: #1d1d1f;
+            background: #fff; outline: none; font-family: inherit;
+            transition: border-color .15s;
+        }
+        .tg-input:focus { border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0,113,227,.15); }
+        .tg-btn {
+            padding: 9px 18px; border-radius: 10px; border: none;
+            background: #0071e3; color: #fff; font-size: 14px; font-weight: 500;
+            cursor: pointer; font-family: inherit; transition: opacity .15s; white-space: nowrap;
+        }
+        .tg-btn:hover { opacity: .85; }
+        .tg-btn-detect { background: rgba(0,0,0,.06); color: #1d1d1f; }
+        .tg-hint { font-size: 12px; color: #aeaeb2; margin-top: 10px; line-height: 1.5; }
+        .tg-saved {
+            font-size: 13px; color: #34c759; font-weight: 500;
+            margin-top: 8px; display: flex; align-items: center; gap: 4px;
+        }
+
         /* ── Chart card ── */
         .chart-card {
             background: #fff; border-radius: 18px;
@@ -204,6 +248,54 @@
         <div class="streak-icon {{^streak}}zero{{/streak}}">
             <i class="bi bi-fire"></i>
         </div>
+    </div>
+
+    <!-- Telegram -->
+    <div class="tg-card">
+        <div class="tg-header">
+            <div class="tg-icon"><i class="bi bi-telegram"></i></div>
+            <div>
+                <div class="tg-title">Telegram уведомления</div>
+                <div class="tg-sub">За 30 минут до начала задачи</div>
+            </div>
+        </div>
+        {{#telegramConnected}}
+        <div class="tg-connected"><i class="bi bi-check-circle-fill"></i> Подключено</div>
+        {{/telegramConnected}}
+        {{#telegramSaved}}
+        <div class="tg-saved"><i class="bi bi-check-circle-fill"></i> Сохранено</div>
+        {{/telegramSaved}}
+        <form action="/profile/telegram" method="post">
+            <div class="tg-row">
+                <input type="text" id="tgChatId" name="chatId" class="tg-input"
+                       value="{{telegramChatId}}" placeholder="Ваш Chat ID">
+                <button type="button" class="tg-btn tg-btn-detect" onclick="detectChatId()">Определить</button>
+                <button type="submit" class="tg-btn">Сохранить</button>
+            </div>
+        </form>
+        <div id="tgDetectMsg" style="display:none" class="tg-hint"></div>
+        <div class="tg-hint">
+            Напишите боту любое сообщение → нажмите <b>Определить</b> → Chat ID заполнится автоматически.
+        </div>
+
+        <script>
+        function detectChatId() {
+            const msg = document.getElementById('tgDetectMsg');
+            msg.style.display = '';
+            msg.textContent = 'Определяю...';
+            fetch('/profile/telegram/detect')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.chatId) {
+                        document.getElementById('tgChatId').value = data.chatId;
+                        msg.textContent = '✓ Chat ID найден: ' + data.chatId;
+                    } else {
+                        msg.textContent = data.error || 'Не удалось определить';
+                    }
+                })
+                .catch(() => { msg.textContent = 'Ошибка запроса'; });
+        }
+        </script>
     </div>
 
     <!-- График -->

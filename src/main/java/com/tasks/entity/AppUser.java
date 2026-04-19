@@ -27,4 +27,7 @@ public class AppUser {
 
     @Column(name = "last_activity_date")
     private LocalDate lastActivityDate;
+
+    @Column(name = "telegram_chat_id")
+    private String telegramChatId;
 }

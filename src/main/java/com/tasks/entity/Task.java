@@ -42,6 +42,9 @@ public class Task {
     @Column(nullable = false)
     private Priority priority = Priority.MEDIUM;
 
+    @Column(name = "start_notified", nullable = false)
+    private boolean startNotified = false;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type = Type.DAILY;

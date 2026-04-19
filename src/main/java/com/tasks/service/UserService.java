@@ -54,6 +54,12 @@ public class UserService implements UserDetailsService {
         return user.getStreak();
     }
 
+    public void saveTelegramChatId(String username, String chatId) {
+        AppUser user = getByUsername(username);
+        user.setTelegramChatId(chatId == null || chatId.isBlank() ? null : chatId.trim());
+        userRepository.save(user);
+    }
+
     public void register(String username, String password) {
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("Пользователь уже существует");

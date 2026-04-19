@@ -3,14 +3,15 @@ package com.tasks.controller;
 import com.tasks.entity.AppUser;
 import com.tasks.entity.Task;
 import com.tasks.service.TaskService;
+import com.tasks.service.TelegramService;
 import com.tasks.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class ProfileController {
 
     private final TaskService taskService;
     private final UserService userService;
+    private final TelegramService telegramService;
 
     private static final ZoneId MSK = ZoneId.of("Europe/Moscow");
     private static final int CHART_DAYS = 14;
@@ -80,7 +82,28 @@ public class ProfileController {
         model.addAttribute("total", total);
         model.addAttribute("chartLabels", labelsJson);
         model.addAttribute("chartData", dataJson);
+        model.addAttribute("telegramChatId", user.getTelegramChatId() != null ? user.getTelegramChatId() : "");
+        model.addAttribute("telegramConnected", user.getTelegramChatId() != null);
 
         return "profile";
+    }
+
+    @PostMapping("/telegram")
+    public String saveTelegram(@RequestParam String chatId,
+                               @AuthenticationPrincipal UserDetails userDetails,
+                               RedirectAttributes ra) {
+        userService.saveTelegramChatId(userDetails.getUsername(), chatId);
+        ra.addFlashAttribute("telegramSaved", true);
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/telegram/detect")
+    @ResponseBody
+    public java.util.Map<String, String> detectChatId() {
+        String chatId = telegramService.detectChatId();
+        if (chatId != null) {
+            return java.util.Map.of("chatId", chatId);
+        }
+        return java.util.Map.of("error", "Нет сообщений. Напишите боту что-нибудь и попробуйте снова.");
     }
 }
