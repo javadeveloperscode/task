@@ -34,8 +34,8 @@ public class TaskController {
         List<Task> all = taskService.findAll();
 
         List<Task> overdue = all.stream().filter(Task::isOverdue).toList();
-        List<Task> dailyActive = daily.stream().filter(t -> !t.isOverdue()).toList();
-        List<Task> globalActive = global.stream().filter(t -> !t.isOverdue()).toList();
+        List<Task> dailyActive = daily.stream().filter(t -> !t.isOverdue() && !t.isDone()).toList();
+        List<Task> globalActive = global.stream().filter(t -> !t.isOverdue() && !t.isDone()).toList();
 
         model.addAttribute("overdueTasks", overdue.stream().map(TaskListItem::from).toList());
         model.addAttribute("hasOverdueTasks", !overdue.isEmpty());
@@ -50,6 +50,16 @@ public class TaskController {
         model.addAttribute("overdueCount", all.stream().filter(Task::isOverdue).count());
         model.addAttribute("streak", userService.getByUsername(user.getUsername()).getStreak());
         return "tasks/list";
+    }
+
+    @GetMapping("/done")
+    public String done(Model model) {
+        List<Task> all = taskService.findAll();
+        List<Task> doneTasks = all.stream().filter(Task::isDone).toList();
+        model.addAttribute("doneTasks", doneTasks.stream().map(TaskListItem::from).toList());
+        model.addAttribute("hasDoneTasks", !doneTasks.isEmpty());
+        model.addAttribute("doneCount", doneTasks.size());
+        return "tasks/done";
     }
 
     @GetMapping("/new")

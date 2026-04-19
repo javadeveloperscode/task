@@ -285,6 +285,9 @@
             <div class="streak {{^streak}}zero{{/streak}}">
                 🔥 {{streak}}
             </div>
+            <a href="/tasks/done" class="btn btn-secondary btn-icon">
+                <i class="bi bi-check2-all"></i>
+            </a>
             <a href="/profile" class="btn btn-secondary">
                 <i class="bi bi-person-circle"></i>
                 <span>Профиль</span>
@@ -343,7 +346,6 @@
                                onchange="this.form.submit()">
                     </form>
                     {{/endDateOnly}}
-                    {{^endDateOnly}}<span class="task-date">—</span>{{/endDateOnly}}
                 </div>
                 <form action="/tasks/{{id}}/status" method="post">
                     <select name="status" class="status-select s-{{statusValue}}" onchange="this.form.submit()">
@@ -404,7 +406,6 @@
                                onchange="this.form.submit()">
                     </form>
                     {{/endDateOnly}}
-                    {{^endDateOnly}}<span class="task-date">—</span>{{/endDateOnly}}
                 </div>
                 <form action="/tasks/{{id}}/status" method="post">
                     <select name="status" class="status-select s-{{statusValue}}" onchange="this.form.submit()">
@@ -469,7 +470,6 @@
                                onchange="this.form.submit()">
                     </form>
                     {{/endDateOnly}}
-                    {{^endDateOnly}}<span class="task-date">—</span>{{/endDateOnly}}
                 </div>
                 <form action="/tasks/{{id}}/status" method="post">
                     <select name="status" class="status-select s-{{statusValue}}" onchange="this.form.submit()">
