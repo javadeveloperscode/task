@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Service
@@ -49,12 +47,12 @@ public class TelegramService {
             return;
         }
         try {
-            String encoded = URLEncoder.encode(text, StandardCharsets.UTF_8);
-            String url = "https://api.telegram.org/bot" + botToken
-                    + "/sendMessage?chat_id=" + chatId
-                    + "&text=" + encoded
-                    + "&parse_mode=HTML";
-            restTemplate.getForObject(url, String.class);
+            String url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
+            var headers = new org.springframework.http.HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+            var body = java.util.Map.of("chat_id", chatId, "text", text, "parse_mode", "HTML");
+            var request = new org.springframework.http.HttpEntity<>(body, headers);
+            restTemplate.postForObject(url, request, String.class);
         } catch (Exception e) {
             log.error("Ошибка отправки Telegram уведомления в чат {}: {}", chatId, e.getMessage());
         }

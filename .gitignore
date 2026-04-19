@@ -31,6 +31,7 @@ bin/
 
 ### Secrets ###
 .env
+src/main/resources/application.properties
 
 ### Maven ###
 target/
