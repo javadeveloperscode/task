@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "tasks")
@@ -61,7 +62,8 @@ public class Task {
     }
 
     public boolean isOverdue() {
-        return status != Status.DONE && endDate != null && LocalDateTime.now().isAfter(endDate);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        return status != Status.DONE && endDate != null && !now.isBefore(endDate);
     }
 
     public boolean isDone() {
