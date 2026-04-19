@@ -47,6 +47,11 @@
         .btn-ghost { background: transparent; color: #6e6e73; border: 1px solid #d2d2d7; }
         .btn-icon { padding: 6px 10px; }
         .btn-danger-ghost { background: transparent; color: #ff3b30; border: 1px solid rgba(255,59,48,.3); }
+        .btn-done {
+            background: rgba(52,199,89,.12); color: #248a3d;
+            border: 1px solid rgba(52,199,89,.35);
+        }
+        .btn-done:hover { background: rgba(52,199,89,.2); opacity: 1; }
 
         /* ── Streak ── */
         .streak {
@@ -285,8 +290,9 @@
             <div class="streak {{^streak}}zero{{/streak}}">
                 🔥 {{streak}}
             </div>
-            <a href="/tasks/done" class="btn btn-secondary btn-icon">
+            <a href="/tasks/done" class="btn btn-done">
                 <i class="bi bi-check2-all"></i>
+                <span>Выполнено</span>
             </a>
             <a href="/profile" class="btn btn-secondary">
                 <i class="bi bi-person-circle"></i>
